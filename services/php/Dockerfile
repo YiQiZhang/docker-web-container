@@ -28,7 +28,7 @@ RUN docker-php-ext-configure gd \
 	--with-freetype-dir=/usr/include/ \
 	--with-png-dir=/usr \
 	--with-jpeg-dir=/usr \
-	&& docker-php-ext-install curl mcrypt zlib bz2 zip mbstring gd iconv mysqli pdo_mysql opcache openssl
+	&& docker-php-ext-install curl mcrypt bz2 zip mbstring gd iconv mysqli pdo_mysql opcache openssl
 
 COPY ./config/php.ini /usr/local/etc/php/conf.d/
 COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
