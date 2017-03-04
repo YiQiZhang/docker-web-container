@@ -22,14 +22,13 @@ RUN apt-get update && apt-get install -y \
 	libjpeg-dev \
 	libpng12-dev \
 	libfreetype6-dev \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-configure gd \
-	--with-zlib-dir \
-	--with-freetype-dir \
-	--enable-mbstring \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure gd \
+	--with-freetype-dir=/usr/include/ \
 	--with-png-dir=/usr \
 	--with-jpeg-dir=/usr \
-	&& docker-php-ext-install curl mcrypt zlib bz2 zip mbstrin gd iconv mysqli pdo_mysql opcache openssl
+	&& docker-php-ext-install curl mcrypt zlib bz2 zip mbstring gd iconv mysqli pdo_mysql opcache openssl
 
 COPY ./config/php.ini /usr/local/etc/php/conf.d/
 COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
