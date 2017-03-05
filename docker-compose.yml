@@ -18,7 +18,7 @@ services:
             dockerfile: Dockerfile
         volumes:
             - ./app:/mnt/app
-    mysql:
+    mariadb:
         image: mariadb:10.1
         ports:
             - "3306:3306"
@@ -28,6 +28,7 @@ services:
             MYSQL_PASSWORD: "app"
         volumes:
             - ./data/mysql:/var/lib/mysql
+            - ./services/mariadb/config/:/etc/mysql/conf.d/
     redis:
         image: redis:3.2.1
         ports:
