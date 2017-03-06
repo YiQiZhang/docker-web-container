@@ -21,7 +21,7 @@ services:
     gogs:
         image: gogs/gogs
         ports:
-            - "10022:22"
+            - "10022:10022"
         volumes:
             - ./data/gogs/:/data
     web:
