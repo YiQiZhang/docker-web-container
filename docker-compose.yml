@@ -1,5 +1,21 @@
 version: '2'
 services:
+    dns:
+        image: andyshinn/dnsmasq:2.75
+        ports:
+            - "53:53"
+            - "53:53/udp"
+        cap_add:
+            - NET_ADMIN
+        volumes:
+            - ./services/dnsmasq/config/dnsmasq.conf:/etc/dnsmasq.conf
+            - ./services/dnsmasq/config/resolv.dnsmasq:/etc/resolv.dnsmasq
+    gogs:
+        image: gogs/gogs
+        ports:
+            - "10022:22"
+        volumes:
+            - ./data/gogs/:/data
     web:
         image: nginx:1.11.1
         ports:
@@ -12,6 +28,8 @@ services:
             - ./services/nginx/config/nginx.conf:/etc/nginx/nginx.conf
             - ./services/nginx/config/sites-enabled:/etc/nginx/sites-enabled
             - ./data/nginx/logs/:/var/log/nginx/
+        links:
+            - gogs
     php:
         build:
             context: ./services/php
