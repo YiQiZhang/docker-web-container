@@ -32,10 +32,17 @@ RUN docker-php-ext-configure gd \
 COPY ./config/php.ini /usr/local/etc/php/conf.d/
 COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
 
+# install cron
+RUN apt-get install -y cron
+COPY ./config/cron/ /etc/cron.d/
+RUN cron
+
 # install supervisor
-RUN apt-get install -y \
-	supervisor
+RUN apt-get install -y supervisor
 COPY ./config/supervisor/ /etc/supervisor/conf.d/
+COPY ./scripts/configure-supervisor.sh /root/configure-supervisor.sh
+RUN chmod +x /root/configure-supervisor.sh \
+	&& /root/configure-supervisor.sh
 
 # clean
 RUN apt-get clean \
