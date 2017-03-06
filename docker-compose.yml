@@ -33,4 +33,10 @@ services:
         image: redis:3.2.1
         ports:
             - "6379:6379"
+    console:
+        build:
+            context: ./services/console
+            dockerfile: Dockerfile
+        volumes_from:
+            - php
 

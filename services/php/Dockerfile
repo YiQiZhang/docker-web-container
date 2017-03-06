@@ -21,8 +21,7 @@ RUN apt-get update && apt-get install -y \
 	libcurl4-openssl-dev \
 	libjpeg-dev \
 	libpng12-dev \
-	libfreetype6-dev \
-	&& rm -rf /var/lib/apt/lists/*
+	libfreetype6-dev
 
 RUN docker-php-ext-configure gd \
 	--with-freetype-dir=/usr/include/ \
@@ -32,3 +31,13 @@ RUN docker-php-ext-configure gd \
 
 COPY ./config/php.ini /usr/local/etc/php/conf.d/
 COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
+
+# install supervisor
+RUN apt-get install -y \
+	supervisor
+COPY ./config/supervisor/ /etc/supervisor/conf.d/
+
+# clean
+RUN apt-get clean \
+	&& apt-get autoclean \
+	&& rm -rf /var/lib/apt/lists/*
