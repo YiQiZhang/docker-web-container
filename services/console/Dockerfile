@@ -50,3 +50,11 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& . ~/.bashrc \
 	&& composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
+# configure cron
+COPY ./config/cron/*.cron /cron.d/
+WORKDIR /cron.d
+RUN find *.cron -type f -exec cat {} \;>>/etc/crontab
+
+WORKDIR /
+
+ENTRYPOINT ["cron", "-f"]

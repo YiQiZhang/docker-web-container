@@ -1,2 +1,3 @@
 * * * * * root php /mnt/app/platform/artisan schedule:run >> /dev/null 2>&1
+* * * * * root echo "hello world" >> /tmp/test.log
 
