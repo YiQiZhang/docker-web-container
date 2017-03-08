@@ -28,7 +28,7 @@ RUN docker-php-ext-configure gd \
 	--with-freetype-dir=/usr/include/ \
 	--with-png-dir=/usr \
 	--with-jpeg-dir=/usr \
-	&& docker-php-ext-install mcrypt bz2 zip mbstring gd iconv mysqli pdo_mysql opcache 
+	&& docker-php-ext-install mcrypt bz2 zip mbstring gd iconv mysqli pdo_mysql opcache bcmath
 
 # set language
 RUN dpkg-reconfigure locales && \

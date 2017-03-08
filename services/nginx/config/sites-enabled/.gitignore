@@ -1,3 +1,4 @@
 *
 !.gitignore
-!.test-php
+!testphp.conf
+!testtomcat.conf
