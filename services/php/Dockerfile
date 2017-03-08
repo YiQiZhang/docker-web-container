@@ -32,10 +32,6 @@ RUN docker-php-ext-configure gd \
 COPY ./config/php.ini /usr/local/etc/php/conf.d/
 COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
 
-# install supervisor
-RUN apt-get install -y supervisor
-COPY ./config/supervisor/ /etc/supervisor/conf.d/
-
 # clean
 RUN apt-get clean \
 	&& apt-get autoclean \

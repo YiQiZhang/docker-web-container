@@ -22,14 +22,13 @@ RUN apt-get update && apt-get install -y \
 	libcurl4-openssl-dev \
 	libjpeg-dev \
 	libpng12-dev \
-	libfreetype6-dev \
-	&& rm -rf /var/lib/apt/lists/*
+	libfreetype6-dev
 
 RUN docker-php-ext-configure gd \
 	--with-freetype-dir=/usr/include/ \
 	--with-png-dir=/usr \
 	--with-jpeg-dir=/usr \
-	&& docker-php-ext-install curl mcrypt bz2 zip mbstring gd iconv mysqli pdo_mysql opcache 
+	&& docker-php-ext-install mcrypt bz2 zip mbstring gd iconv mysqli pdo_mysql opcache 
 
 # set language
 RUN dpkg-reconfigure locales && \
@@ -55,6 +54,16 @@ COPY ./config/cron/*.cron /cron.d/
 WORKDIR /cron.d
 RUN find *.cron -type f -exec cat {} \;>>/etc/crontab
 
-WORKDIR /
+# configure supervisor
+RUN apt-get install -y supervisor
+COPY ./config/supervisor/ /etc/supervisor/conf.d/
 
-ENTRYPOINT ["cron", "-f"]
+# clean
+RUN apt-get clean \
+	&& apt-get autoclean \
+	&& rm -rf /var/lib/apt/lists/*
+
+COPY ./scripts/startup.sh /bin/startup.sh
+RUN chmod +x /bin/startup.sh
+WORKDIR /
+ENTRYPOINT ["startup.sh"]
