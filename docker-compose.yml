@@ -5,19 +5,11 @@ services:
         ports:
             - "80:80"
         depends_on:
-            - php
-        volumes_from:
-            - php
+            - tomcat
         volumes:
             - ./services/nginx/config/nginx.conf:/etc/nginx/nginx.conf
             - ./services/nginx/config/sites-enabled:/etc/nginx/sites-enabled
             - ./data/nginx/logs/:/var/log/nginx/
-    php:
-        build:
-            context: ./services/php
-            dockerfile: Dockerfile
-        volumes:
-            - ./app:/mnt/app
     mariadb:
         image: mariadb:10.1
         ports:
@@ -29,14 +21,12 @@ services:
         volumes:
             - ./data/mysql:/var/lib/mysql
             - ./services/mariadb/config/:/etc/mysql/conf.d/
-    redis:
-        image: redis:3.2.1
-        ports:
-            - "6379:6379"
-    console:
-        build:
-            context: ./services/console
-            dockerfile: Dockerfile
-        volumes_from:
-            - php
+    tomcat:
+        image: tomcat:8.0
+        environment:
+            CATALINA_BASE: "/usr/local/tomcat"
+            CATALINA_HOME: "/usr/local/tomcat"
+            CATALINA_TMPDIR: "/usr/local/tomcat/temp"
+            JRE_HOME: "/usr"
+            CLASSPATH: "/usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar"
 
