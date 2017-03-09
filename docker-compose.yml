@@ -27,6 +27,11 @@ services:
             CATALINA_TMPDIR: "/usr/local/tomcat/temp"
             JRE_HOME: "/usr"
             CLASSPATH: "/usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar"
+        volumes:
+            - ./services/tomcat/config/server.xml:/usr/local/tomcat/conf/server.xml
+            - ./services/tomcat/config/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+            - ./data/tomcat/logs/:/usr/local/tomcat/logs/
+            - ./app/java-webapp/meaon/:/usr/local/tomcat/webapps/meaon
     mariadb:
         image: mariadb:10.1
         ports:
