@@ -31,7 +31,7 @@ services:
             - ./services/tomcat/config/server.xml:/usr/local/tomcat/conf/server.xml
             - ./services/tomcat/config/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
             - ./data/tomcat/logs/:/usr/local/tomcat/logs/
-            - ./app/java-webapp/meaon/:/usr/local/tomcat/webapps/meaon
+            - ./app/java-webapp/:/usr/local/tomcat/webapps/meaon/
     mariadb:
         image: mariadb:10.1
         ports:
