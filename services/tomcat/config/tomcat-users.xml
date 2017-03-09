@@ -36,8 +36,7 @@ them. You will also need to set the passwords to something appropriate.
 -->
 
 <role rolename="tomcat"/>
-<role rolename="role1"/>
-<user username="tomcat" password="meaon520sm" roles="tomcat"/>
-<user username="both" password="meaon520sm" roles="tomcat,role1"/>
-<user username="role1" password="meaon520sm" roles="role1"/>
+<user username="tomcat" password="secret" roles="tomcat"/>
+<role rolename="admin-gui"/>
+<user username="tomcat" password="secret" roles="admin-gui"/>
 </tomcat-users>
