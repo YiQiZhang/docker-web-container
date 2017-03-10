@@ -10,6 +10,14 @@ services:
         volumes:
             - ./services/dnsmasq/config/dnsmasq.conf:/etc/dnsmasq.conf
             - ./services/dnsmasq/config/resolv.dnsmasq:/etc/resolv.dnsmasq
+    samba:
+        image: dperson/samba
+        ports:
+            - "139:139"
+            - "445:445"
+        volumes:
+            - ./services/samba/config/smb.conf:/etc/smb.conf
+            - ./data/samba/:/mount
     gogs:
         image: gogs/gogs
         ports:
