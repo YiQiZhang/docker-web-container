@@ -65,5 +65,5 @@ RUN apt-get clean \
 
 COPY ./scripts/startup.sh /bin/startup.sh
 RUN chmod +x /bin/startup.sh
-WORKDIR /
+WORKDIR /mnt/app
 ENTRYPOINT ["startup.sh"]
