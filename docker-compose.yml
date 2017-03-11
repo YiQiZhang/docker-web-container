@@ -43,7 +43,7 @@ services:
             MYSQL_PASSWORD: "app"
         volumes:
             - ./data/mysql:/var/lib/mysql
-            - ./services/mariadb/config/:/etc/mysql/conf.d/
+            - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
     redis:
         image: redis:3.2.1
         ports:
