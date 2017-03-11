@@ -31,6 +31,7 @@ services:
             - ./services/tomcat/bin/startup.sh:/usr/local/tomcat/bin/startup.sh
             - ./services/tomcat/config/server.xml:/usr/local/tomcat/conf/server.xml
             - ./services/tomcat/config/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+            - ./services/tomcat/config/logging.properties:/usr/local/tomcat/logging.properties
             - ./data/tomcat/logs/:/usr/local/tomcat/logs/
             - ./app/java-webapp/:/usr/local/tomcat/webapps/meaon/
     mariadb:
