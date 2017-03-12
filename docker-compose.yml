@@ -16,7 +16,7 @@ services:
             - "139:139"
             - "445:445"
         volumes:
-            - ./services/samba/config/smb.conf:/etc/smb.conf
+            - ./services/samba/config/smb.conf:/etc/samba/smb.conf
             - ./data/samba/:/mount
     gogs:
         image: gogs/gogs
