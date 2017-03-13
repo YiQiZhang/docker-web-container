@@ -4,3 +4,5 @@ tmp/
 
 .idea/
 
+# file system
+.DS_Store
