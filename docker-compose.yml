@@ -73,6 +73,7 @@ services:
             dockerfile: Dockerfile54
         volumes:
             - ./app:/mnt/app
+            - ./services/php/config/php54-fpm.ini:/usr/local/etc/php-fpm.conf
     tomcat:
         image: tomcat:8.0
         environment:
