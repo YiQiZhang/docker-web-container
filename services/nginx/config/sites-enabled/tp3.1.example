@@ -1,0 +1,31 @@
+server {
+	listen               80;
+	server_name          express.jdy.meaon.jerry;
+	root                 /mnt/app/jdy/express-backend;
+	index                index.php index.html index.htm;
+	client_max_body_size 256m;
+
+	location / {  
+		index  index.htm index.html index.php;  
+		if (!-e $request_filename) {  
+			rewrite  ^/(kuaidi\.php)(.*)$  /kuaidi.php?s=$2  last;  
+			break;  
+		}  
+	}  
+
+	location ~ \.php$ {
+		fastcgi_pass   php54:9000;
+		fastcgi_index  kuaidi.php;
+		fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+		include        fastcgi_params;
+
+		set $fastcgi_script_name2 $fastcgi_script_name;  
+		if ($fastcgi_script_name ~ "^(.+\.php)(/.+)$") {  
+			set $fastcgi_script_name2 $1;  
+			set $path_info $2;  
+		}  
+		fastcgi_param   PATH_INFO $path_info;  
+		fastcgi_param   SCRIPT_FILENAME   $document_root$fastcgi_script_name2;  
+		fastcgi_param   SCRIPT_NAME   $fastcgi_script_name2;  
+	}
+}
