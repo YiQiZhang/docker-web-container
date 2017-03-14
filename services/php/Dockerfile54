@@ -1,0 +1,31 @@
+FROM php:5.4.40-fpm
+MAINTAINER jerry <jrzyq111@gmail.com>
+
+RUN apt-get update && apt-get install -y \
+	build-essential \
+	gcc \
+	make \
+	curl \
+	libfcgi-dev \
+	libmcrypt-dev \
+	libssl-dev \
+	libxml2-dev \
+	libbz2-dev \
+	libcurl4-openssl-dev \
+	libjpeg-dev \
+	libpng12-dev \
+	libfreetype6-dev
+
+RUN docker-php-ext-configure gd \
+	--with-freetype-dir=/usr/include/ \
+	--with-png-dir=/usr \
+	--with-jpeg-dir=/usr \
+	&& docker-php-ext-install mbstring gd iconv mysql mysqli 
+
+COPY ./config/php.ini /usr/local/etc/php/conf.d/
+COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
+
+# clean
+RUN apt-get clean \
+	&& apt-get autoclean \
+	&& rm -rf /var/lib/apt/lists/*
