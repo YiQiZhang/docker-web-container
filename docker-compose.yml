@@ -1,72 +1,17 @@
 version: '2'
 services:
-    dns:
-        image: andyshinn/dnsmasq:2.75
-        ports:
-            - "53:53"
-            - "53:53/udp"
-        cap_add:
-            - NET_ADMIN
-        volumes:
-            - ./services/dnsmasq/config/dnsmasq.conf:/etc/dnsmasq.conf
-            - ./services/dnsmasq/config/resolv.dnsmasq:/etc/resolv.dnsmasq
-    samba:
-        image: dperson/samba
-        ports:
-            - "139:139"
-            - "445:445"
-        volumes:
-            - ./services/samba/config/smb.conf:/etc/samba/smb.conf
-            - ./data/samba/:/mount
-    gogs:
-        image: gogs/gogs
-        ports:
-            - "10022:22"
-        volumes:
-            - ./data/gogs/:/data
     web:
         image: nginx:1.11.1
         ports:
             - "80:80"
         depends_on:
-            - php71
-            - php56
             - php54
-            - tomcat
         volumes_from:
-            - php71
+            - php54
         volumes:
             - ./services/nginx/config/nginx.conf:/etc/nginx/nginx.conf
             - ./services/nginx/config/sites-enabled:/etc/nginx/sites-enabled
             - ./data/nginx/logs/:/var/log/nginx/
-        links:
-            - gogs
-    php71:
-        build:
-            context: ./services/php
-            dockerfile: Dockerfile71
-        volumes:
-            - ./data/php/logs/php71.log:/var/log/php.log
-            - ./app:/mnt/app
-    php71console:
-        build:
-            context: ./services/console
-            dockerfile: Dockerfile71
-        volumes_from:
-            - php71
-    php56:
-        build:
-            context: ./services/php
-            dockerfile: Dockerfile56
-        volumes:
-            - ./data/php/logs/php56.log:/var/log/php.log
-            - ./app:/mnt/app
-    php56console:
-        build:
-            context: ./services/console
-            dockerfile: Dockerfile56
-        volumes_from:
-            - php56
     php54:
         build:
             context: ./services/php
@@ -74,21 +19,6 @@ services:
         volumes:
             - ./app:/mnt/app
             - ./services/php/config/php54-fpm.ini:/usr/local/etc/php-fpm.conf
-    tomcat:
-        image: tomcat:8.0
-        environment:
-            CATALINA_BASE: "/usr/local/tomcat"
-            CATALINA_HOME: "/usr/local/tomcat"
-            CATALINA_TMPDIR: "/usr/local/tomcat/temp"
-            JRE_HOME: "/usr"
-            CLASSPATH: "/usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar"
-        volumes:
-            - ./services/tomcat/bin/startup.sh:/usr/local/tomcat/bin/startup.sh
-            - ./services/tomcat/config/server.xml:/usr/local/tomcat/conf/server.xml
-            - ./services/tomcat/config/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
-            - ./services/tomcat/config/logging.properties:/usr/local/tomcat/logging.properties
-            - ./data/tomcat/logs/:/usr/local/tomcat/logs/
-            - ./app/java-webapp/:/usr/local/tomcat/webapps/meaon/
     mariadb:
         image: mariadb:10.1
         ports:
@@ -100,7 +30,3 @@ services:
         volumes:
             - ./data/mysql:/var/lib/mysql
             - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
-    redis:
-        image: redis:3.2.1
-        ports:
-            - "6379:6379"
