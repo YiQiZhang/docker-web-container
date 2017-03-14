@@ -1,5 +1,12 @@
-FROM php:7.1
+FROM php:5.6
 MAINTAINER jerry <jrzyq111@gmail.com>
+
+ENV PHPREDIS_VERSION 2.2.7
+ENV PHPREDIS_EXT_DIR /usr/src/php/redis
+
+RUN mkdir -p $PHPREDIS_EXT_DIR \
+	&& curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C $PHPREDIS_EXT_DIR --strip 1 \
+	&& docker-php-ext-install $PHPREDIS_EXT_DIR
 
 WORKDIR /mnt/app
 
