@@ -47,6 +47,12 @@ services:
             dockerfile: Dockerfile54
         volumes:
             - ./app:/mnt/app
+    php54console:
+        build:
+            context: ./services/console
+            dockerfile: Dockerfile54
+        volumes_from:
+            - php54
     tomcat:
         image: tomcat:8.0
         environment:
