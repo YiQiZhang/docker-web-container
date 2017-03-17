@@ -47,6 +47,7 @@ services:
             dockerfile: Dockerfile54
         volumes:
             - ./app:/mnt/app
+            - ./services/php/config/php54-fpm.ini:/usr/local/etc/php-fpm.conf
     php54console:
         build:
             context: ./services/console
