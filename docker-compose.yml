@@ -19,6 +19,12 @@ services:
         volumes:
             - ./app:/mnt/app
             - ./services/php/config/php54-fpm.ini:/usr/local/etc/php-fpm.conf
+    php54console:
+        build:
+            context: ./services/console
+            dockerfile: Dockerfile54
+        volumes_from:
+            - php54
     mariadb:
         image: mariadb:10.1
         ports:
