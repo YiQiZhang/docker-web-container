@@ -54,6 +54,10 @@ services:
             dockerfile: Dockerfile54
         volumes_from:
             - php54
+    php52:
+        image: tommylau/php-5.2
+        volumes:
+            - ./app:/mnt/app
     tomcat:
         image: tomcat:8.0
         environment:
