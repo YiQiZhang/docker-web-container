@@ -3,7 +3,7 @@ services:
     dns:
         image: andyshinn/dnsmasq:2.75
         ports:
-            - "53:53"
+            - "53:53/tcp"
             - "53:53/udp"
         cap_add:
             - NET_ADMIN
@@ -26,9 +26,12 @@ services:
             - ./data/gogs/:/data
     web:
         image: nginx:1.11.1
+        extra_hosts:
+            - "api.jdy.meaon.jerry:192.168.188.35"
         ports:
             - "80:80"
         depends_on:
+            - dns
             - php71
             - php56
             - php54

@@ -1,0 +1,10 @@
+server {
+	listen               80;
+	server_name          www.jdypost.cn;
+
+	location /jerry {
+		resolver 192.168.188.8 ipv6=off;
+		proxy_pass http://api.jdy.meaon.jerry/;
+                proxy_redirect default;
+	}
+}
