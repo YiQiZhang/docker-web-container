@@ -1,3 +1,3 @@
 *
 !.gitignore
-!laravel-worker.conf
+!laravel-worker.example
