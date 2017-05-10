@@ -11,6 +11,3 @@ deb-src http://mirrors.163.com/ubuntu/ precise-updates multiverse
 deb http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse
 deb-src http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse
 
-deb http://deb.debian.org/debian jessie main
-deb http://deb.debian.org/debian jessie-updates main
-deb http://security.debian.org jessie/updates main
