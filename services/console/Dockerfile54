@@ -1,6 +1,8 @@
 FROM php:5.4.40
 MAINTAINER jerry <jrzyq111@gmail.com>
 
+COPY ./config/sources.list /etc/apt/sources.list
+
 WORKDIR /mnt/app
 
 RUN apt-get update && apt-get install -y \
