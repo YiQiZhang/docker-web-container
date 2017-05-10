@@ -1,6 +1,8 @@
 FROM php:7.1-fpm
 MAINTAINER jerry <jrzyq111@gmail.com>
 
+COPY ./config/sources.list /etc/apt/sources.list
+
 ENV PHPREDIS_VERSION 3.0.0
 ENV PHPREDIS_EXT_DIR /usr/src/php/redis
 

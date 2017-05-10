@@ -1,6 +1,8 @@
 FROM php:5.4.40-fpm
 MAINTAINER jerry <jrzyq111@gmail.com>
 
+COPY ./config/sources.list /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
 	build-essential \
 	gcc \
