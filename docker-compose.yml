@@ -94,6 +94,17 @@ services:
             - ./services/tomcat/config/logging.properties:/usr/local/tomcat/logging.properties
             - ./data/tomcat/logs/:/usr/local/tomcat/logs/
             - ./app/java-webapp/:/usr/local/tomcat/webapps/meaon/
+    mariadb:
+        image: mariadb:10.3
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: "secret"
+            MYSQL_USER: "app"
+            MYSQL_PASSWORD: "secret"
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+            - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
     redis:
         image: redis:3.2.1
         ports:
