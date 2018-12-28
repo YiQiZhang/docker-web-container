@@ -41,7 +41,8 @@ services:
             context: ./services/php
             dockerfile: Dockerfile71
         volumes:
-            - ./data/php/logs/php71.log:/var/log/php.log
+            - ./services/php/config/php71/www.conf:/usr/local/etc/php-fpm.d/www.conf
+            - ./data/php/logs:/var/log
             - ./app:/mnt/app
     php71console:
         build:
