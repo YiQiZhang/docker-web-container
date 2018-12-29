@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.1-fpm-jessie
 MAINTAINER jerry <jrzyq111@gmail.com>
 
 COPY ./config/sources.list /etc/apt/sources.list
