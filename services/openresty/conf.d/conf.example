@@ -1,0 +1,28 @@
+lua_package_path '/mnt/app/project/openresty-backend/?.lua;/blah/?.lua;;';
+
+lua_code_cache off;
+
+server {
+	listen               80;
+	server_name          api.project.com admin.project.com;
+	root                 /mnt/app/project/php-backend/public;
+	index                index.php index.html index.htm;
+	client_max_body_size 16m;
+
+	location ~ /api/user/im/lm/(detail|receive)$ {
+		root /mnt/app/project/openresty-backend;
+		default_type application/json;
+		content_by_lua_file /mnt/app/project/openresty-backend/main.lua;
+	}
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	location ~ \.php$ {
+		fastcgi_pass   php71:9000;
+		fastcgi_index  index.php;
+		fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+		include        fastcgi_params;
+	}
+}
