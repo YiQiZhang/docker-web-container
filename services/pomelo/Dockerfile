@@ -1,6 +1,8 @@
 FROM node:8.11.1
 MAINTAINER jerry <jrzyq111@gmail.com>
 
+COPY ./config/sources.list /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
 	sysstat
 
