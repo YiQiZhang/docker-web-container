@@ -1,0 +1,39 @@
+FROM php:7.4-fpm
+MAINTAINER jerry <jrzyq111@gmail.com>
+
+ENV PHPREDIS_VERSION 3.0.0
+ENV PHPREDIS_EXT_DIR /usr/src/php/redis
+
+RUN mkdir -p $PHPREDIS_EXT_DIR \
+	&& curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C $PHPREDIS_EXT_DIR --strip 1 \
+	&& docker-php-ext-install $PHPREDIS_EXT_DIR
+
+RUN apt-get update && apt-get install -y \
+	build-essential \
+	gcc \
+	make \
+	curl \
+	libonig-dev \
+	libfcgi-dev \
+	libssl-dev \
+	libxml2-dev \
+	libbz2-dev \
+	libcurl4-openssl-dev \
+	libzip-dev \
+    libjpeg62-turbo-dev \
+	libpng-dev \
+	libfreetype6-dev \
+	libgmp-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& docker-php-ext-install -j4 gd bz2 zip mbstring iconv mysqli pdo_mysql opcache bcmath gmp
+
+COPY ./config/php.ini /usr/local/etc/php/conf.d/
+COPY ./config/opcache-recommended.ini /usr/local/etc/php/conf.d/
+
+# clean
+RUN apt-get clean \
+	&& apt-get autoclean \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-source delete

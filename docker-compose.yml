@@ -49,6 +49,39 @@ services:
             - ./data/openresty/logs:/usr/local/openresty/nginx/logs
         environment:
             TZ: "Asia/Shanghai"
+    im:
+        build:
+            context: ./app/im/im-backend-production
+            dockerfile: Dockerfile
+        depends_on:
+            - openresty
+            - mariadb
+            - redis
+        volumes:
+            - ./app/im/im-backend-production:/app
+        environment:
+            TZ: "Asia/Shanghai"
+        entrypoint:
+            - "java"
+            - "-Djava.security.egd=file:/dev/./urandom"
+            - "-jar"
+            - "/app/target/app.jar"
+            - "--spring.config.location=/app/config/"
+            - "--spring.profiles.active=prod"
+    php74:
+        build:
+            context: ./services/php
+            dockerfile: Dockerfile74
+        volumes:
+            - ./app:/mnt/app:cached
+            - ./services/php/config/php71/www.conf:/usr/local/etc/php-fpm.d/www.conf
+            - ./data/php/logs:/var/log
+    php74console:
+        build:
+            context: ./services/console
+            dockerfile: Dockerfile74
+        volumes:
+            - ./app:/mnt/app:cached
     php71:
         build:
             context: ./services/php
@@ -87,6 +120,12 @@ services:
             - ./data/mysql:/var/lib/mysql
             - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
     redis:
-        image: redis:3.2.1
+        image: redis:6.0.8
         ports:
             - "6379:6379"
+        volumes:
+            - ./data/redis:/data
+            - ./services/redis/redis.conf:/usr/local/etc/redis/redis.conf
+        entrypoint:
+            - "redis-server"
+            - "/usr/local/etc/redis/redis.conf"
