@@ -120,7 +120,7 @@ services:
             - ./data/mysql:/var/lib/mysql
             - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
     redis:
-        image: redis:6.0.8
+        image: redis:6.2.5
         ports:
             - "6379:6379"
         volumes:
