@@ -1,0 +1,40 @@
+lua_package_path '/mnt/app/weiyou-im/weiyou-openresty-backend/?.lua;/blah/?.lua;;';
+
+lua_code_cache off;
+
+server {
+	listen               80;
+	server_name          v1.weiyouim.cyww.jerry;
+	root                 /mnt/app/weiyou-im/weiyou-openresty-backend;
+	index                index.html index.htm;
+	client_max_body_size 256m;
+
+	location ~ /api/user/im/lm/(detail|receive)$ {
+		default_type application/json;
+		content_by_lua_file /mnt/app/weiyou-im/weiyou-openresty-backend/main.lua;
+	}
+
+	location / {
+		default_type text/html;
+		content_by_lua 'ngx.say("not found")';
+	}
+}
+
+server {
+	listen               80;
+	server_name          api.weiyouim.cyww.jerry;
+	root                 /mnt/app/weiyou-im/weiyou-im-backend/public;
+	index                index.php index.html index.htm;
+	client_max_body_size 256m;
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	location ~ \.php$ {
+		fastcgi_pass   php71:9000;
+		fastcgi_index  index.php;
+		fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+		include        fastcgi_params;
+	}
+}

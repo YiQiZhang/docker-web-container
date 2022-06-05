@@ -1,7 +1,7 @@
 FROM php:7.4-fpm
 MAINTAINER jerry <jrzyq111@gmail.com>
 
-ENV PHPREDIS_VERSION 3.0.0
+ENV PHPREDIS_VERSION 5.3.7
 ENV PHPREDIS_EXT_DIR /usr/src/php/redis
 
 RUN mkdir -p $PHPREDIS_EXT_DIR \
