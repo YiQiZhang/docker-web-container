@@ -39,9 +39,6 @@ services:
         ports:
             - "80:80"
             - "443:443"
-        depends_on:
-            - dns
-            - php71
         volumes:
             - ./app:/mnt/app:cached
             - ./services/openresty/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
@@ -49,25 +46,25 @@ services:
             - ./data/openresty/logs:/usr/local/openresty/nginx/logs
         environment:
             TZ: "Asia/Shanghai"
-    im:
-        build:
-            context: ./app/im/im-backend-production
-            dockerfile: Dockerfile
-        depends_on:
-            - openresty
-            - mariadb
-            - redis
-        volumes:
-            - ./app/im/im-backend-production:/app
-        environment:
-            TZ: "Asia/Shanghai"
-        entrypoint:
-            - "java"
-            - "-Djava.security.egd=file:/dev/./urandom"
-            - "-jar"
-            - "/app/target/app.jar"
-            - "--spring.config.location=/app/config/"
-            - "--spring.profiles.active=prod"
+              # im:
+              #     build:
+              #         context: ./app/im/im-backend-production
+              #         dockerfile: Dockerfile
+              #     depends_on:
+              #         - openresty
+              #         - mariadb
+              #         - redis
+              #     volumes:
+              #         - ./app/im/im-backend-production:/app
+              #     environment:
+              #         TZ: "Asia/Shanghai"
+              #     entrypoint:
+              #         - "java"
+              #         - "-Djava.security.egd=file:/dev/./urandom"
+              #         - "-jar"
+              #         - "/app/target/app.jar"
+              #         - "--spring.config.location=/app/config/"
+              #         - "--spring.profiles.active=prod"
     php74:
         build:
             context: ./services/php
@@ -75,25 +72,12 @@ services:
         volumes:
             - ./app:/mnt/app:cached
             - ./services/php/config/php71/www.conf:/usr/local/etc/php-fpm.d/www.conf
+            - ./services/php/config/php.ini:/usr/local/etc/php/conf.d/php.ini
             - ./data/php/logs:/var/log
     php74console:
         build:
             context: ./services/console
             dockerfile: Dockerfile74
-        volumes:
-            - ./app:/mnt/app:cached
-    php71:
-        build:
-            context: ./services/php
-            dockerfile: Dockerfile71
-        volumes:
-            - ./app:/mnt/app:cached
-            - ./services/php/config/php71/www.conf:/usr/local/etc/php-fpm.d/www.conf
-            - ./data/php/logs:/var/log
-    php71console:
-        build:
-            context: ./services/console
-            dockerfile: Dockerfile71
         volumes:
             - ./app:/mnt/app:cached
     php56:
@@ -119,6 +103,16 @@ services:
         volumes:
             - ./data/mysql:/var/lib/mysql
             - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
+    postgres:
+        image: postgres:10.4
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            PGDATA: /var/lib/postgresql/data/pgdata
+        volumes:
+            - ./data/postgres:/var/lib/postgresql/data/
     redis:
         image: redis:6.2.5
         ports:
@@ -129,3 +123,45 @@ services:
         entrypoint:
             - "redis-server"
             - "/usr/local/etc/redis/redis.conf"
+    redis2:
+        image: redis:6.2.5
+        ports:
+            - "6380:6379"
+        volumes:
+            - ./data/redis2:/data
+            - ./services/redis/redis.conf:/usr/local/etc/redis/redis.conf
+        entrypoint:
+            - "redis-server"
+            - "/usr/local/etc/redis/redis.conf"
+    zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+            - "2181:2181"
+    kafka:
+        build: ./services/kafka
+        ports:
+            - "9092:9092"
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: 192.168.1.12
+            KAFKA_CREATE_TOPICS: "digiccy-plan-command:1:1,digiccy-plan-action-0:1:1,digiccy-plan-action-1:1:1,digiccy-plan-action-2:1:1,digiccy-plan-action-3:1:1,digiccy-plan-action-4:1:1,digiccy-plan-action-5:1:1,digiccy-plan-action-6:1:1,digiccy-plan-action-7:1:1,digiccy-plan-action-8:1:1,digiccy-plan-action-9:1:1,digiccy-plan-action-10:1:1,digiccy-plan-action-11:1:1,digiccy-plan-action-12:1:1,digiccy-plan-action-13:1:1,digiccy-plan-action-14:1:1,digiccy-plan-action-15:1:1,digiccy-plan-action-16:1:1"
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    es01:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.4.2
+        volumes:
+            - ./data/esdata01:/usr/share/elasticsearch/data
+        ports:
+            - 9200:9200
+            - 9300:9300
+        environment:
+            - node.name=es
+            - cluster.name=elasticsearch
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - xpack.security.enabled=false
+            - xpack.security.http.ssl.enabled=false
+            - xpack.security.transport.ssl.enabled=false
+        privileged: true
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1

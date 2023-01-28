@@ -8,8 +8,6 @@ RUN mkdir -p $PHPREDIS_EXT_DIR \
 	&& curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C $PHPREDIS_EXT_DIR --strip 1 \
 	&& docker-php-ext-install $PHPREDIS_EXT_DIR
 
-COPY ./config/sources.list /etc/apt/sources.list
-
 WORKDIR /mnt/app
 
 RUN apt-get update && apt-get install -y \

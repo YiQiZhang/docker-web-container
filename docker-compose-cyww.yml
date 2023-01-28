@@ -1,0 +1,58 @@
+version: '3'
+services:
+    openresty:
+        image: openresty/openresty:1.15.8.1-centos
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./app:/mnt/app
+            - ./services/openresty/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+            - ./services/openresty/conf.d:/etc/nginx/conf.d
+            - ./data/openresty/logs:/usr/local/openresty/nginx/logs
+        environment:
+            TZ: "Asia/Shanghai"
+    juxuetang:
+        build:
+            context: ./app/juxuetang/juxuetang-backend-production
+            dockerfile: Dockerfile
+        depends_on:
+            - openresty
+            - redis
+        volumes:
+            - ./app/juxuetang/juxuetang-backend-production:/app
+        environment:
+            TZ: "Asia/Shanghai"
+        entrypoint:
+            - "java"
+            - "-Djava.security.egd=file:/dev/./urandom"
+            - "-jar"
+            - "/app/target/app.jar"
+            - "--spring.config.location=/app/config/"
+            - "--spring.profiles.active=prod"
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "2g"
+                max-file: "10"
+    mariadb:
+        image: mariadb:10.3
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: "secret"
+            MYSQL_USER: "app"
+            MYSQL_PASSWORD: "secret"
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+            - ./services/mariadb/config/my.cnf:/etc/mysql/my.cnf
+    redis:
+        image: redis:6.2.5
+        ports:
+                - "6379:6379"
+        volumes:
+            - ./data/redis:/data
+            - ./services/redis/redis.conf:/usr/local/etc/redis/redis.conf
+        entrypoint:
+            - "redis-server"
+            - "/usr/local/etc/redis/redis.conf"
